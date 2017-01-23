@@ -28,7 +28,7 @@ class test_add_group(unittest.TestCase):
         wd.find_element_by_name("pass").send_keys("secret")
         wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
         wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_name("new").click()
+        wd.find_element_by_xpath("//input[@name='new' and @value='New group']").click()
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
         wd.find_element_by_name("group_name").send_keys("grr")
