@@ -15,18 +15,9 @@ class test_add_contact(unittest.TestCase):
         self.wd.implicitly_wait(60)
     
     def test_test_add_contact(self):
-        success = True
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_id("LoginForm").click()
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_id("LoginForm").click()
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
+        self.open_home_page(wd)
+        self.login(wd, "admin", "secret")
         wd.find_element_by_name("MainForm").click()
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
@@ -71,8 +62,22 @@ class test_add_contact(unittest.TestCase):
         wd.find_element_by_name("searchstring").click()
         wd.find_element_by_name("searchstring").send_keys("\\9")
         wd.find_element_by_link_text("Logout").click()
-        self.assertTrue(success)
-    
+
+
+    def login(self, wd, username, password):
+        wd.find_element_by_id("LoginForm").click()
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys(username)
+        wd.find_element_by_id("LoginForm").click()
+        wd.find_element_by_name("pass").click()
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys(password)
+        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
+
+    def open_home_page(self, wd):
+        wd.get("http://localhost/addressbook/")
+
     def tearDown(self):
         self.wd.quit()
 
