@@ -1,4 +1,5 @@
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from fixture.session import SessionHelper
 from fixture.contact import ContactHelper
 from fixture.group import GroupHelper
@@ -7,7 +8,7 @@ from fixture.group import GroupHelper
 class Application:
 
     def __init__(self):
-        self.wd = WebDriver()
+        self.wd = WebDriver(firefox_binary=FirefoxBinary("c:\\Program Files\\Mozilla Firefox\\firefox.exe"))
         self.wd.implicitly_wait(60)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
