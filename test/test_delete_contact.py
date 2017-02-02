@@ -1,6 +1,4 @@
 
 
-def test_modify_contact(app):
-    app.session.login("admin", "secret")
+def test_delete_contact(app):
     app.contact.delete_contact()
-    app.session.logout()
