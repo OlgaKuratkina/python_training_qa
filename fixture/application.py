@@ -9,7 +9,7 @@ class Application:
 
     def __init__(self):
         self.wd = WebDriver(firefox_binary=FirefoxBinary("c:\\Program Files\\Mozilla Firefox\\firefox.exe"))
-        self.wd.implicitly_wait(4)
+
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
@@ -23,11 +23,13 @@ class Application:
 
     def goto_groups_page(self):
         wd = self.wd
-        wd.find_element_by_link_text("groups").click()
+        if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0):
+            wd.find_element_by_link_text("groups").click()
 
     def open_home_page(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
+        if not len(wd.find_elements_by_class_name("fdTableSortTrigger")) > 0:
+            wd.get("http://localhost/addressbook/")
 
     def destroy(self):
         self.wd.quit()
