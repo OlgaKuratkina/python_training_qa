@@ -36,7 +36,7 @@ class GroupHelper:
 
     def select_first_group(self):
         wd = self.app.wd
-        wd.find_element_by_xpath("//input[@name = 'selected[]' or @value = '32']").click()
+        wd.find_element_by_xpath("//input[@name = 'selected[]']").click()
 
     def modify_group(self, group):
         wd = self.app.wd
@@ -46,3 +46,9 @@ class GroupHelper:
         self.fill_group_info(group)
         wd.find_element_by_name("update").click()
         self.app.goto_groups_page()
+
+    def count(self):
+        wd = self.app.wd
+        self.app.goto_groups_page()
+        return len(wd.find_elements_by_xpath("//input[@name = 'selected[]']"))
+
