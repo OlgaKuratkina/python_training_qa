@@ -34,22 +34,31 @@ class ContactHelper:
         self.fill_text_field("home", contact.phone)
         self.fill_text_field("email", contact.email)
 
-    def delete_contact(self):
+    def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         self.contact_cache = None
 
     def select_first_contact(self):
-        wd = self.app.wd
-        wd.find_element_by_name("selected[]").click()
+        self.select_contact_by_index(0)
 
-    def modify_contact(self, contact):
+    def select_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def modify_first_contact(self, contact):
+        self.modify_contact_by_index(contact, 0)
+
+    def modify_contact_by_index(self, contact, index):
         wd = self.app.wd
         self.app.open_home_page()
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         wd.find_element_by_xpath("//img[@title='Details']").click()
         wd.find_element_by_name("modifiy").click()
         self.fill_contact_data(contact)
