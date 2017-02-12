@@ -9,7 +9,7 @@ def test_modify_contact(app):
                                      email="olga.kuratkina@gmail.com")
     contact.id = old_conts[0].id
     app.contact.modify_contact(contact)
+    assert len(old_conts) == app.contact.count()
     new_conts = app.contact.get_contact_list()
-    assert len(old_conts) == len(new_conts)
     old_conts[0] = contact
     assert sorted(old_conts, key=Contact.id_or_max) == sorted(new_conts, key=Contact.id_or_max)
