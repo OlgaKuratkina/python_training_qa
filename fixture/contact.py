@@ -1,4 +1,5 @@
 from model.contact import Contact
+import re
 
 
 class ContactHelper:
@@ -57,12 +58,20 @@ class ContactHelper:
 
     def modify_contact_by_index(self, contact, index):
         wd = self.app.wd
-        self.app.open_home_page()
-        #self.select_contact_by_index(index)
-        wd.find_elements_by_xpath("//img[@title='Edit']")[index].click()
+        self.open_contact_edit_by_index(index)
         self.fill_contact_data(contact)
         wd.find_element_by_name("update").click()
         self.contact_cache = None
+
+    def open_contact_view_by_index(self, index):
+        wd = self.app.wd
+        self.app.open_home_page()
+        wd.find_elements_by_xpath("//img[@title='Details']")[index].click()
+
+    def open_contact_edit_by_index(self, index):
+        wd = self.app.wd
+        self.app.open_home_page()
+        wd.find_elements_by_xpath("//img[@title='Edit']")[index].click()
 
     def count(self):
         wd = self.app.wd
@@ -77,11 +86,75 @@ class ContactHelper:
             self.app.open_home_page()
             self.contact_cache = []
             for elem in wd.find_elements_by_name("entry"):
-                last_name = elem.find_elements_by_css_selector("td")[1].text
-                name = elem.find_elements_by_css_selector("td")[2].text
+                cells = elem.find_elements_by_css_selector("td")
+                last_name = cells[1].text
+                name = cells[2].text
+                address = cells[3].text
                 id = elem.find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cache.append(Contact(id=id, last_name=last_name, name=name))
+                all_phones = cells[5].text
+                all_mails = cells[4].text
+                self.contact_cache.append(Contact(id=id, last_name=last_name, name=name, address=address,
+                                                  all_phones_from_home_page=all_phones, all_mails_from_home_page=all_mails))
         return self.contact_cache
 
+    def get_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_edit_by_index(index)
+        name = wd.find_element_by_name("firstname").get_attribute("value")
+        last_name = wd.find_element_by_name("lastname").get_attribute("value")
+        id = wd.find_element_by_name("id").get_attribute("value")
+        phone = wd.find_element_by_name("home").get_attribute("value")
+        phone_mobile = wd.find_element_by_name("mobile").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
+        phone_work = wd.find_element_by_name("work").get_attribute("value")
+        phone_second = wd.find_element_by_name("phone2").get_attribute("value")
+        email = wd.find_element_by_name("email").get_attribute("value")
+        email_second = wd.find_element_by_name("email2").get_attribute("value")
+        email_third = wd.find_element_by_name("email3").get_attribute("value")
+        return Contact(name=name, last_name=last_name, id=id, phone=phone, phone_mobile=phone_mobile, address=address,
+                       phone_work=phone_work, phone_second=phone_second, email=email, email_second=email_second,
+                       email_third=email_third)
 
+    def get_contact_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_view_by_index(index)
+        text = wd.find_element_by_id("content").text
+        phone = re.search("H: (.*)", text).group(1)
+        phone_mobile = re.search("M: (.*)", text).group(1)
+        phone_work = re.search("W: (.*)", text).group(1)
+        phone_second = re.search("P: (.*)", text).group(1)
+        #print(text)
+        return Contact(phone=phone, phone_mobile=phone_mobile, phone_work=phone_work, phone_second=phone_second)
 
+    def get_contact_body_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_view_by_index(index)
+        text = wd.find_element_by_id("content").text
+        return text
+
+# consider deleting this
+    @staticmethod
+    def clear(s):
+        return re.sub("[() -]]", "", s)
+
+    def merge_phones_like_on_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.clear(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.phone, contact.phone_mobile, contact.phone_work,
+                                            contact.phone_second]))))
+
+    def merge_phones_like_on_view_page(self, contact):
+        contact.phone = "H: " + contact.phone
+        contact.phone_mobile = "M: " + contact.phone_mobile
+        contact.phone_work = "W: " + contact.phone_work
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.clear(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.phone, contact.phone_mobile, contact.phone_work]))))
+
+    def merge_mails_like_on_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.clear(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.email, contact.email_second, contact.email_third]))))
