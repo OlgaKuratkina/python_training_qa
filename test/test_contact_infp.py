@@ -1,4 +1,8 @@
-def test_phones_on_home_page(app, index=0):
+from random import randrange
+
+
+def test_phones_on_home_page(app):
+    index = randrange(app.contact.count())
     contact_from_home_page = app.contact.get_contact_list()[index]
     contact_from_edit_page = app.contact.get_info_from_edit_page(index)
     assert contact_from_home_page.name == contact_from_edit_page.name

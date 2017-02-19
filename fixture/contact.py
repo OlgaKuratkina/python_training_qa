@@ -123,7 +123,6 @@ class ContactHelper:
         phone_mobile = re.search("M: (.*)", text).group(1)
         phone_work = re.search("W: (.*)", text).group(1)
         phone_second = re.search("P: (.*)", text).group(1)
-        #print(text)
         return Contact(phone=phone, phone_mobile=phone_mobile, phone_work=phone_work, phone_second=phone_second)
 
     def get_contact_body_from_view_page(self, index):
