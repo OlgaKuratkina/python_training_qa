@@ -10,6 +10,7 @@ def random_string(prefix, maxlen):
     digs = string.digits + " "*3
     return clear_extra_whitespaces(prefix + "".join([random.choice(symb) for i in range(random.randrange(maxlen))]))
 
+
 def random_digit(maxlen):
     digs = string.digits + " "*3
     return "".join([random.choice(digs) for i in range(random.randrange(maxlen))])
@@ -22,10 +23,6 @@ def clear_extra_whitespaces(text):
 def symbol_remove(text):
     return text.replace("~", "")
 
-
-# def random_string(prefix, maxlen):
-#     symb = string.ascii_letters + string.digits + " "*10
-#     return prefix + "".join([random.choice(symb) for i in range(random.randrange(maxlen))])
 
 test_data = [Contact(name="", last_name="", address="")] + [Contact(name=random_string("name", 10), phone=random_digit(11),
                                                             second_name=random_string("second_name", 15),
@@ -40,9 +37,6 @@ def test_test_add_contact(app, contact):
     assert len(old_conts) + 1 == app.contact.count()
     new_conts = app.contact.get_contact_list()
     old_conts.append(contact)
-    print(sorted(old_conts, key=Contact.id_or_max))
-    print("---")
-    print(sorted(new_conts, key=Contact.id_or_max))
     assert sorted(old_conts, key=Contact.id_or_max) == sorted(new_conts, key=Contact.id_or_max)
 
 
