@@ -154,6 +154,5 @@ class ContactHelper:
 
     def merge_mails_like_on_home_page(self, contact):
         return "\n".join(filter(lambda x: x != "",
-                                map(lambda x: self.clear(x),
                                     filter(lambda x: x is not None,
-                                           [contact.email, contact.email_second, contact.email_third]))))
+                                           [contact.email, contact.email_second, contact.email_third])))
