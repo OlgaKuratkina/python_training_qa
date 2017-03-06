@@ -165,7 +165,7 @@ class ContactHelper:
 # consider deleting this
     @staticmethod
     def clear(s):
-        return re.sub("[() -]]", "", s)
+        return re.sub("[() -]]", "", s).replace(" ", "")
 
     def merge_phones_like_on_home_page(self, contact):
         return "\n".join(filter(lambda x: x != "",

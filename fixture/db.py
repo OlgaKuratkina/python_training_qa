@@ -29,10 +29,13 @@ class DBfixture():
         l = []
         cursor = self.connection.cursor()
         try:
-            cursor.execute("select id, firstname, lastname from addressbook where deprecated='0000-00-00 00:00:00'")
+            cursor.execute("select id, firstname, lastname, address, home, mobile, work, phone2, email, email2, email3 from addressbook where deprecated='0000-00-00 00:00:00'")
             for row in cursor.fetchall():
-                (id, firstname, lastname) = row
-                l.append(Contact(str(id), name=firstname, last_name=lastname))
+                (id, firstname, lastname, address, phone, phone_mobile, phone_work, phone_second, email,
+                 email_second, email_third) = row
+                l.append(Contact(str(id), name=firstname, last_name=lastname, address=address, phone=phone,
+                                 phone_mobile=phone_mobile, phone_work=phone_work, phone_second=phone_second,
+                                 email=email, email_second=email_second, email_third=email_third))
         finally:
             cursor.close()
         return l
