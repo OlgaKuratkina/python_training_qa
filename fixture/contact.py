@@ -1,5 +1,6 @@
 from model.contact import Contact
 import re
+import selenium.webdriver.support.ui as ui
 
 
 class ContactHelper:
@@ -15,6 +16,11 @@ class ContactHelper:
         wd.find_element_by_name("theform").click()
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.contact_cache = None
+
+    def waiting(self):
+        wd = self.app.wd
+        wait = ui.WebDriverWait(wd, 10)
+        wait.until(lambda wd: wd.find_element_by_link_text("add new"))
 
     def fill_text_field(self, field_name, text):
         wd = self.app.wd
