@@ -1,6 +1,7 @@
 import pymysql.cursors
 from fixture.db import DBfixture
 from fixture.orm import ORMfixture
+from model.group import Group
 
 
 connection = pymysql.connect(host="127.0.0.1", database="addressbook", user="root", password="")
@@ -15,5 +16,7 @@ finally:
     connection.close()
 
 db = DBfixture("127.0.0.1", "addressbook", "root", "")
-print(orm_db.get_group_list())
-print(orm_db.get_contact_list())
+#print(orm_db.get_group_list())
+print(orm_db.get_contacts_in_groups(Group(id='217')))
+
+print(orm_db.get_contacts_not_in_groups(Group(id='217')))
