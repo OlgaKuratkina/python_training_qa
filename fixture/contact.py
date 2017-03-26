@@ -97,7 +97,6 @@ class ContactHelper:
         wd.find_element_by_name("remove").click()
         self.app.open_home_page()
 
-
     def modify_contact_by_id(self, contact, id):
         wd = self.app.wd
         self.open_contact_edit_by_id(id)
